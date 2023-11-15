@@ -12,7 +12,9 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
+    "gts": "^5.2.0",
     "nodemon": "^3.0.1",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "typescript": "~5.2.0"
   }
 }

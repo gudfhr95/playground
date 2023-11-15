@@ -2,12 +2,7 @@
   "name": "playground",
   "scripts": {
     "lint": "gts lint",
-    "clean": "gts clean",
-    "compile": "tsc",
-    "fix": "gts fix",
-    "prepare": "pnpm run compile",
-    "pretest": "pnpm run compile",
-    "posttest": "pnpm run lint"
+    "fix": "gts fix"
   },
   "devDependencies": {
     "@types/node": "20.8.2",

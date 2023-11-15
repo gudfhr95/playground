@@ -48,12 +48,18 @@ importers:
       '@types/express':
         specifier: ^4.17.21
         version: 4.17.21
+      gts:
+        specifier: ^5.2.0
+        version: 5.2.0(typescript@5.2.2)
       nodemon:
         specifier: ^3.0.1
         version: 3.0.1
       ts-node:
         specifier: ^10.9.1
         version: 10.9.1(@types/node@20.8.2)(typescript@5.2.2)
+      typescript:
+        specifier: ~5.2.0
+        version: 5.2.2
 
 packages:
 

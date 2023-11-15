@@ -10,7 +10,7 @@ deps:
 build:
     FROM +deps
     RUN pnpm run build
-    SAVE ARTIFACT dist AS LOCAL dist
+    SAVE ARTIFACT out AS LOCAL out
 
 docker:
     FROM +build
