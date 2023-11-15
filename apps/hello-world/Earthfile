@@ -1,0 +1,19 @@
+VERSION 0.7
+FROM node:20-alpine
+WORKDIR /app
+
+deps:
+    RUN corepack enable
+    COPY . .
+    RUN pnpm install
+
+build:
+    FROM +deps
+    RUN pnpm run build
+    SAVE ARTIFACT dist AS LOCAL dist
+
+docker:
+    FROM +build
+    EXPOSE 80
+    ENTRYPOINT ["pnpm", "start"]
+    SAVE IMAGE hello-world:latest

@@ -27,6 +27,7 @@
 ### Prerequisites
 
 - pre-commit >= 3
+- Earthly >= 0.7
 - Node.js >= 20
 - pnpm >= 8
 
