@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node out/index.js",
     "build": "tsc -p .",
-    "dev": "env-cmd -f .env.development nodemon --watch \"**/*.ts\" --exec \"ts-node\" index.ts"
+    "dev": "env-cmd -f .env.dev nodemon --watch \"**/*.ts\" --exec \"ts-node\" index.ts"
   },
   "dependencies": {
     "env-cmd": "^10.1.0",

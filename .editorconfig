@@ -11,6 +11,9 @@ insert_final_newline = true
 [*.py]
 indent_size = 4
 
+[Earthfile]
+indent_size = 4
+
 # Tab indentation (no size specified)
 [Makefile]
 indent_style = tab
