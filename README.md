@@ -26,58 +26,27 @@
 
 ### Prerequisites
 
-- Node.js 20
-- pnpm
+- pre-commit >= 3
+- Node.js >= 20
+- pnpm >= 8
 
-[//]: # ()
+### Installing
 
-[//]: # (What things you need to install the software and how to install them.)
+- Install pre-commit hooks
 
-[//]: # ()
+```
 
-[//]: # (```)
+pre-commit install
 
-[//]: # (Give examples)
+```
 
-[//]: # (```)
+- Install Node.js dependencies
 
-[//]: # ()
+```
 
-[//]: # (### Installing)
+pnpm install
 
-[//]: # ()
-
-[//]: # (A step by step series of examples that tell you how to get a development env running.)
-
-[//]: # ()
-
-[//]: # (Say what the step will be)
-
-[//]: # ()
-
-[//]: # (```)
-
-[//]: # (Give the example)
-
-[//]: # (```)
-
-[//]: # ()
-
-[//]: # (And repeat)
-
-[//]: # ()
-
-[//]: # (```)
-
-[//]: # (until finished)
-
-[//]: # (```)
-
-[//]: # ()
-
-[//]: # (End with an example of getting some data out of the system or using it for a little demo.)
-
-[//]: # ()
+```
 
 [//]: # (## Usage <a name = "usage"></a>)
 
