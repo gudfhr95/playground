@@ -28,6 +28,7 @@
 
 - pre-commit >= 3
 - Earthly >= 0.7
+- Pulumi >= 3
 - Node.js >= 20
 - pnpm >= 8
 
@@ -36,17 +37,22 @@
 - Install pre-commit hooks
 
 ```
-
 pre-commit install
+```
 
+- Configure Pulumi
+
+```
+export AWS_ACCESS_KEY_ID=<YOUR_ACCESS_KEY_ID>
+export AWS_SECRET_ACCESS_KEY=<YOUR_SECRET_ACCESS_KEY>
+
+pulumi login
 ```
 
 - Install Node.js dependencies
 
 ```
-
 pnpm install
-
 ```
 
 [//]: # (## Usage <a name = "usage"></a>)
