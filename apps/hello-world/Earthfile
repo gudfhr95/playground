@@ -14,7 +14,6 @@ build:
 
 docker:
     FROM +build
-    ARG PROFILE
     EXPOSE 80
-    ENTRYPOINT ./node_modules/.bin/env-cmd -f .env.${PROFILE} pnpm start
+    ENTRYPOINT pnpm start
     SAVE IMAGE hello-world:latest
