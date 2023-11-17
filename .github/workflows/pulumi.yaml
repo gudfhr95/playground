@@ -17,6 +17,10 @@ jobs:
     uses: ./.github/workflows/node-check.yaml
 
   preview:
+    strategy:
+      matrix:
+        profile: [ 'dev', 'qa', 'prod' ]
+    environment: ${{ matrix.profile }}
     name: Pulumi Preview
     if: github.ref != 'refs/heads/main'
     needs: check
