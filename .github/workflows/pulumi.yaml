@@ -21,7 +21,7 @@ jobs:
       matrix:
         profile: [ 'dev', 'qa', 'prod' ]
     name: Pulumi Preview
-    if: github.ref != 'refs/heads/main'
+    if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/release/*' && github.event_name != 'workflow_dispatch'
     needs: check
     uses: ./.github/workflows/pulumi-preview.yaml
     with:
