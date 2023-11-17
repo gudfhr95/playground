@@ -2,6 +2,10 @@ name: Pulumi Up
 
 on:
   workflow_call:
+    inputs:
+      profile:
+        type: string
+        required: true
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -18,6 +22,7 @@ jobs:
   up:
     name: Pulumi Up
     runs-on: ubuntu-latest
+    environment: ${{ inputs.profile }}
     steps:
       - uses: actions/checkout@v4
       - name: Use pnpm
@@ -40,7 +45,7 @@ jobs:
       - uses: pulumi/actions@v4
         with:
           command: up
-          stack-name: ${{ secrets.PULUMI_ORG_NAME }}/infra/dev
+          stack-name: ${{ secrets.PULUMI_ORG_NAME }}/infra/${{ inputs.profile }}
           work-dir: infra/pulumi
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
