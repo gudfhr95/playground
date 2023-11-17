@@ -1,4 +1,4 @@
-name: Pulumi Preview
+name: Pulumi Up
 
 on:
   workflow_call:
@@ -15,8 +15,8 @@ on:
         required: true
 
 jobs:
-  preview:
-    name: Pulumi Preview
+  up:
+    name: Pulumi Up
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,10 +39,8 @@ jobs:
         run: pnpm install
       - uses: pulumi/actions@v4
         with:
-          command: preview
+          command: up
           stack-name: ${{ secrets.PULUMI_ORG_NAME }}/infra/dev
-          comment-on-pr: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           work-dir: infra/pulumi
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
