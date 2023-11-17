@@ -1,0 +1,22 @@
+name: Pulumi
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'infra/pulumi/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'infra/pulumi/**'
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Check Node.js
+    uses: ./.github/workflows/node-check.yaml
+
+  preview:
+    name: Pulumi Preview
+    if: github.ref != 'refs/heads/main'
+    uses: ./.github/workflows/pulumi-preview.yaml
