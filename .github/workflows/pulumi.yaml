@@ -31,8 +31,8 @@ jobs:
   up-non-prod:
     strategy:
       matrix:
-        profile: [ 'dev', 'qa', 'prod' ]
-    name: Pulumi Up
+        profile: [ 'dev', 'qa' ]
+    name: Pulumi Up (Non-Prod)
     if: github.ref == 'refs/heads/main'
     needs: check
     uses: ./.github/workflows/pulumi-up.yaml
@@ -44,7 +44,7 @@ jobs:
     strategy:
       matrix:
         profile: [ 'prod' ]
-    name: Pulumi Up
+    name: Pulumi Up (Prod)
     if: github.ref == 'refs/heads/release/*'
     needs: check
     uses: ./.github/workflows/pulumi-up.yaml
