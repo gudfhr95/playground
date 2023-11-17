@@ -1,3 +1,3 @@
 import * as aws from '@pulumi/aws';
 
-export const bucket = new aws.s3.Bucket('my-bucket-1');
+export const bucket = new aws.s3.Bucket('my-bucket-2');
