@@ -19,11 +19,13 @@ jobs:
   preview:
     name: Pulumi Preview
     if: github.ref != 'refs/heads/main'
+    needs: check
     uses: ./.github/workflows/pulumi-preview.yaml
     secrets: inherit
 
   up:
     name: Pulumi Up
     if: github.ref == 'refs/heads/main'
+    needs: check
     uses: ./.github/workflows/pulumi-up.yaml
     secrets: inherit
