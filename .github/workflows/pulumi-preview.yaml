@@ -9,8 +9,6 @@ on:
         required: true
       AWS_REGION:
         required: true
-      GITHUB_TOKEN:
-        required: true
       PULUMI_ACCESS_TOKEN:
         required: true
 
