@@ -20,3 +20,4 @@ jobs:
     name: Pulumi Preview
     if: github.ref != 'refs/heads/main'
     uses: ./.github/workflows/pulumi-preview.yaml
+    secrets: inherit
