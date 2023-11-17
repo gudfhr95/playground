@@ -24,6 +24,8 @@ jobs:
     if: github.ref != 'refs/heads/main'
     needs: check
     uses: ./.github/workflows/pulumi-preview.yaml
+    with:
+      profile: ${{ matrix.profile }}
     secrets: inherit
 
   up:

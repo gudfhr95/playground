@@ -2,6 +2,10 @@ name: Pulumi Preview
 
 on:
   workflow_call:
+    inputs:
+      profile:
+        type: string
+        required: true
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -18,7 +22,7 @@ jobs:
   preview:
     name: Pulumi Preview
     runs-on: ubuntu-latest
-    environment: ${{ matrix.profile }}
+    environment: ${{ inputs.profile }}
     steps:
       - uses: actions/checkout@v4
       - name: Use pnpm
@@ -41,7 +45,7 @@ jobs:
       - uses: pulumi/actions@v4
         with:
           command: preview
-          stack-name: ${{ secrets.PULUMI_ORG_NAME }}/infra/dev
+          stack-name: ${{ secrets.PULUMI_ORG_NAME }}/infra/${{ inputs.profile }}
           comment-on-pr: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           work-dir: infra/pulumi
