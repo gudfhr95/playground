@@ -22,7 +22,6 @@ jobs:
   preview:
     name: Pulumi Preview
     runs-on: ubuntu-latest
-    environment: ${{ inputs.profile }}
     steps:
       - uses: actions/checkout@v4
       - name: Use pnpm
