@@ -2,7 +2,7 @@ name: Pulumi
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, release/* ]
     paths:
       - 'infra/pulumi/**'
   pull_request:
@@ -29,8 +29,13 @@ jobs:
     secrets: inherit
 
   up:
+    strategy:
+      matrix:
+        profile: [ 'dev', 'qa', 'prod' ]
     name: Pulumi Up
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release/*'
     needs: check
     uses: ./.github/workflows/pulumi-up.yaml
+    with:
+      profile: ${{ matrix.profile }}
     secrets: inherit
