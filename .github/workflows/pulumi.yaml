@@ -28,12 +28,24 @@ jobs:
       profile: ${{ matrix.profile }}
     secrets: inherit
 
-  up:
+  up-non-prod:
     strategy:
       matrix:
         profile: [ 'dev', 'qa', 'prod' ]
     name: Pulumi Up
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release/*'
+    if: github.ref == 'refs/heads/main'
+    needs: check
+    uses: ./.github/workflows/pulumi-up.yaml
+    with:
+      profile: ${{ matrix.profile }}
+    secrets: inherit
+
+  up-prod:
+    strategy:
+      matrix:
+        profile: [ 'prod' ]
+    name: Pulumi Up
+    if: github.ref == 'refs/heads/release/*'
     needs: check
     uses: ./.github/workflows/pulumi-up.yaml
     with:
