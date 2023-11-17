@@ -34,15 +34,21 @@
 
 ### Installing
 
+- Add repository secrets in Github Actions
+  - `AWS_ACCESS_KEY_ID`
+  - `AWS_SECRET_ACCESS_KEY`
+  - `AWS_REGION`
+  - `PULUMI_ACCESS_TOKEN`
+
 - Install pre-commit hooks
 
-```
+```shell
 pre-commit install
 ```
 
 - Configure Pulumi
 
-```
+```shell
 export AWS_ACCESS_KEY_ID=<YOUR_ACCESS_KEY_ID>
 export AWS_SECRET_ACCESS_KEY=<YOUR_SECRET_ACCESS_KEY>
 
@@ -51,7 +57,7 @@ pulumi login
 
 - Install Node.js dependencies
 
-```
+```shell
 pnpm install
 ```
 
