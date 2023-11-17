@@ -76,7 +76,7 @@ importers:
         specifier: ~5.2.0
         version: 5.2.2
 
-  infra/pulumi/ecr:
+  infra/pulumi:
     dependencies:
       '@pulumi/aws':
         specifier: ^6.9.0
