@@ -1,3 +1,3 @@
-import {bucket} from './ecr';
+import {helloWorldRepository} from './ecr';
 
-export const bucketName = bucket.id;
+export const helloWorldRepositoryUrl = helloWorldRepository.url;
