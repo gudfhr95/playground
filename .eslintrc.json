@@ -1,6 +1,7 @@
 {
   "extends": "./node_modules/gts/",
   "rules": {
+    "@typescript-eslint/no-explicit-any": "warn",
     "node/no-unpublished-import": [
       "error",
       {
