@@ -2,7 +2,7 @@ import * as pulumi from '@pulumi/pulumi';
 import {beforeAll, beforeEach, describe, expect, it} from '@jest/globals';
 import {promiseOf} from './util';
 
-describe('S3', () => {
+describe('ECR', () => {
   let infra: typeof import('../src/ecr');
 
   beforeAll(() => {
@@ -12,7 +12,10 @@ describe('S3', () => {
       ): {id: string; state: any} => {
         return {
           id: `${args.name}-id`,
-          state: args.inputs,
+          state: {
+            ...args.inputs,
+            url: `${args.name}-url`,
+          },
         };
       },
 
@@ -26,10 +29,12 @@ describe('S3', () => {
     infra = await import('../src/ecr');
   });
 
-  describe('bucket', () => {
+  describe('hello-world repository', () => {
     it('should be created', async () => {
-      const bucketName = await promiseOf(infra.bucket.id);
-      expect(bucketName).toBe('my-bucket-3-id');
+      const helloWorldRepositoryUrl = await promiseOf(
+        infra.helloWorldRepository.url
+      );
+      expect(helloWorldRepositoryUrl).toBe('hello-world-url');
     });
   });
 });

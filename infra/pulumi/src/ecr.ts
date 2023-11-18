@@ -1,3 +1,3 @@
-import * as aws from '@pulumi/aws';
+import * as awsx from '@pulumi/awsx';
 
-export const bucket = new aws.s3.Bucket('my-bucket-3');
+export const helloWorldRepository = new awsx.ecr.Repository('hello-world', {});
