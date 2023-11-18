@@ -1,6 +1,6 @@
 {
   "name": "infra",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
     "preview": "pulumi preview",
     "up": "pulumi up -y"
@@ -9,5 +9,10 @@
     "@pulumi/aws": "^6.9.0",
     "@pulumi/awsx": "^2.0.2",
     "@pulumi/pulumi": "^3.0.0"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "gts": "^5.2.0",
+    "typescript": "~5.2.0"
   }
 }
