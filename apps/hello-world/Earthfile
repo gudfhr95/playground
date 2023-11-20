@@ -13,8 +13,9 @@ build:
     SAVE ARTIFACT out AS LOCAL out
 
 docker:
-    ARG version='latest'
     FROM +build
+    ARG name='hello-world'
+    ARG version='latest'
     EXPOSE 80
     ENTRYPOINT pnpm start
-    SAVE IMAGE hello-world:${version}
+    SAVE IMAGE ${name}:${version}
