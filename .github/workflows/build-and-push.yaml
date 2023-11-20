@@ -3,7 +3,7 @@ name: Build and Push
 on:
   workflow_call:
     inputs:
-      app:
+      path:
         type: string
         required: true
       profile:
@@ -12,9 +12,7 @@ on:
       version:
         type: string
         required: true
-      path:
-        type: string
-        required: true
+
 
 jobs:
   build:
@@ -25,4 +23,4 @@ jobs:
           version: v0.7.8
       - uses: actions/checkout@v4
       - name: Build Docker image
-        run: earthly ${{ inputs.path }}/+docker --version=${{ inputs.version }}-${{ github.sha }}
+        run: earthly ${{ inputs.path }}/+docker --version=${{ inputs.version }}
