@@ -32,3 +32,4 @@ jobs:
       path: ./apps/hello-world
       profile: dev
       version: ${{ needs.next-version.outputs.version }}
+    secrets: inherit
