@@ -21,7 +21,7 @@ on:
         required: true
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
       - uses: earthly/actions-setup@v1
@@ -34,11 +34,6 @@ jobs:
           cmd: yq '.name' ${{ inputs.path }}/app.yaml
       - name: Build Docker image
         run: earthly ${{ inputs.path }}/+docker --name=${{ steps.name.outputs.result }} --version=${{ inputs.version }}
-
-  push:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
