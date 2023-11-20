@@ -11,9 +11,6 @@ on:
       - 'apps/hello-world/**'
   workflow_dispatch:
 
-env:
-  APP_PATH: ./apps/hello-world
-
 jobs:
   check:
     name: Check Node.js
@@ -24,7 +21,7 @@ jobs:
     needs: check
     uses: ./.github/workflows/next-version.yaml
     with:
-      path: ${{ env.APP_PATH }}
+      path: ./apps/hello-world
       profile: dev
 
   build-and-push:
@@ -32,6 +29,6 @@ jobs:
     needs: next-version
     uses: ./.github/workflows/build-and-push.yaml
     with:
-      path: ${{ env.APP_PATH }}
+      path: ./apps/hello-world
       profile: dev
       version: ${{ needs.next-version.outputs.version }}
