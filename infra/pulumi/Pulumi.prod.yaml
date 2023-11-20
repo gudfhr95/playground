@@ -1,2 +1,3 @@
 config:
+  profile: prod
   aws:region: ap-northeast-2

@@ -1,2 +1,3 @@
 config:
+  profile: dev
   aws:region: ap-northeast-2
