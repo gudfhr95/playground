@@ -9,6 +9,9 @@ on:
       path:
         type: string
         required: true
+    outputs:
+      version:
+        value: ${{ jobs.next-version.outputs.version }}
 
 jobs:
   next-version:
