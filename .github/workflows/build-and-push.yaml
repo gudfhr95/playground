@@ -1,0 +1,28 @@
+name: Build and Push
+
+on:
+  workflow_call:
+    inputs:
+      app:
+        type: string
+        required: true
+      profile:
+        type: string
+        required: true
+      version:
+        type: string
+        required: true
+      path:
+        type: string
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: earthly/actions-setup@v1
+        with:
+          version: v0.7.8
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: earthly ${{ inputs.path }}/+docker --version=${{ inputs.version }}-${{ github.sha }}

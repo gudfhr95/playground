@@ -1,14 +1,14 @@
-name: Node.js CI
+name: Hello World CI
 
 on:
   push:
     branches: [ main ]
     paths:
-      - '!infra/pulumi/**'
+      - 'apps/hello-world/**'
   pull_request:
     branches: [ main ]
     paths:
-      - '!infra/pulumi/**'
+      - 'apps/hello-world/**'
   workflow_dispatch:
 
 jobs:
