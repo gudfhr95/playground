@@ -1,6 +1,5 @@
 {
   "name": "hello-world",
-  "version": "0.0.0",
   "main": "src/index.ts",
   "scripts": {
     "start": "node out/index.js",
