@@ -6,6 +6,10 @@ describe('ECR', () => {
   let infra: typeof import('../src/ecr');
 
   beforeAll(() => {
+    pulumi.runtime.setAllConfig({
+      'project:profile': 'test',
+    });
+
     pulumi.runtime.setMocks({
       newResource: (
         args: pulumi.runtime.MockResourceArgs
@@ -13,8 +17,10 @@ describe('ECR', () => {
         return {
           id: `${args.name}-id`,
           state: {
-            ...args.inputs,
             url: `${args.name}-url`,
+            repository: {
+              name: `${args.inputs.name}`,
+            },
           },
         };
       },
@@ -31,9 +37,14 @@ describe('ECR', () => {
 
   describe('hello-world repository', () => {
     it('should be created', async () => {
+      const helloWorldRepositoryName = await promiseOf(
+        infra.helloWorldRepository.repository.name
+      );
       const helloWorldRepositoryUrl = await promiseOf(
         infra.helloWorldRepository.url
       );
+
+      expect(helloWorldRepositoryName).toBe('hello-world-test');
       expect(helloWorldRepositoryUrl).toBe('hello-world-url');
     });
   });
