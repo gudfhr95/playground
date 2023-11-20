@@ -1,0 +1,29 @@
+name: Get Next Version
+
+on:
+  workflow_call:
+    inputs:
+      profile:
+        type: string
+        required: true
+      path:
+        type: string
+        required: true
+
+jobs:
+  next-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.next-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: current-version
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq '.version' ${{ inputs.path }}/app.yaml
+      - id: semver
+        uses: madhead/semver-utils@latest
+        with:
+          version: ${{ steps.current-version.outputs.result }}
+      - id: next-version
+        run: echo "version=${{ steps.semver.outputs.release }}-${{ github.sha }}" >> $GITHUB_OUTPUT

@@ -15,3 +15,19 @@ jobs:
   check:
     name: Check Node.js
     uses: ./.github/workflows/node-check.yaml
+
+  next-version:
+    name: Get next version
+    needs: check
+    uses: ./.github/workflows/next-version.yaml
+    with:
+      path: ./apps/hello-world
+      profile: dev
+
+  echo:
+    name: Echo next version
+    needs: next-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo next version
+        run: echo "next-version=${{ needs.next-version.outputs.version }}"
