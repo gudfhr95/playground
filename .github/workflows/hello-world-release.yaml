@@ -13,9 +13,18 @@ on:
         default: MINOR
 
 jobs:
-  release:
-    name: Release
-    uses: ./.github/workflows/release.yaml
+  app:
+    name: Parse app.yaml
+    uses: ./.github/workflows/parse-app-yaml.yaml
     with:
       path: ./apps/hello-world
+
+  release:
+    name: Release
+    needs: app
+    uses: ./.github/workflows/release.yaml
+    with:
       type: ${{ inputs.type }}
+      name: ${{ needs.app.outputs.name }}
+      version: ${{ needs.app.outputs.version }}
+      path: ./apps/hello-world

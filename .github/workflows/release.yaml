@@ -3,10 +3,16 @@ name: Release
 on:
   workflow_call:
     inputs:
-      path:
+      type:
         type: string
         required: true
-      type:
+      name:
+        type: string
+        required: true
+      version:
+        type: string
+        required: true
+      path:
         type: string
         required: true
 
@@ -15,15 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Parse app.yaml
-        id: app
-        uses: ./.github/workflows/parse-app-yaml.yaml
-        with:
-          path: ${{ inputs.path }}
       - id: semver
         uses: madhead/semver-utils@latest
         with:
-          version: ${{ steps.app.outputs.version }}
+          version: ${{ inputs.version }}
       - name: Get next version
         id: next-version
         run: |
@@ -44,10 +45,10 @@ jobs:
       - name: Push commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "[skip actions] Automatically update app.yaml version of ${{ steps.app.outputs.name }} to v${{ steps.next-version.outputs.version }}"
+          commit_message: "[skip actions] Automatically update app.yaml version of ${{ inputs.name }} to v${{ steps.next-version.outputs.version }}"
           branch: main
       - name: Push release branch
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          branch: release/${{ steps.app.outputs.name }}-v${{ steps.next-version.outputs.version }}
+          branch: release/${{ inputs.name }}-v${{ steps.next-version.outputs.version }}
           create_branch: true
