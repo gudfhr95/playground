@@ -19,13 +19,14 @@ jobs:
   build-and-push:
     strategy:
       matrix:
+        profile: [ 'dev', 'qa', 'prod' ]
         include:
           - profile: dev
             condition: github.ref == 'refs/heads/main'
     name: Build and push
     needs: check
-    if: ${{ matrix.condition }}
     uses: ./.github/workflows/build-and-push.yaml
+    if: ${{ matrix.condition }}
     with:
       profile: ${{ matrix.profile }}
       path: ./apps/hello-world
