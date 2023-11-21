@@ -3,13 +3,7 @@ name: Release
 on:
   workflow_call:
     inputs:
-      type:
-        type: string
-        required: true
-      name:
-        type: string
-        required: true
-      version:
+      profile:
         type: string
         required: true
       path:
@@ -17,39 +11,77 @@ on:
         required: true
 
 jobs:
-  release:
+  app:
+    name: Parse app.yaml
+    uses: ./.github/workflows/parse-app-yaml.yaml
+    with:
+      path: ${{ inputs.path }}
+
+  next-version:
+    name: Get next version
+    needs: app
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.semver.outputs.preminor }}
     steps:
       - uses: actions/checkout@v4
       - id: semver
         uses: madhead/semver-utils@latest
         with:
-          version: ${{ inputs.version }}
-          identifier: "rc"
-      - name: Get next version
-        id: next-version
-        run: |
-          if [[ "${{ inputs.type }}" == "major" ]]; then
-            VERSION="${{ steps.semver.outputs.inc-major }}"
-          elif [[ "${{ inputs.type }}" == "minor" ]]; then
-            VERSION="${{ steps.semver.outputs.inc-minor }}"
-          elif [[ "${{ inputs.type }}" == "patch" ]]; then
-            VERSION="${{ steps.semver.outputs.inc-patch }}"
-          elif [[ "${{ inputs.type }}" == "preminor" ]]; then
-            VERSION="${{ steps.semver.outputs.inc-preminor }}"
-          fi
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
-        shell: bash
+          version: ${{ needs.app.outputs.version }}
+
+  commit-and-tag:
+    name: Commit and tag
+    needs: [ app, next-version ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Change version
         uses: mikefarah/yq@master
         with:
           cmd: >
             yq -i
-            '.version = "${{ steps.next-version.outputs.version }}"'
+            '.version = "${{ needs.next-version.outputs.version }}"'
             ${{ inputs.path }}/app.yaml
       - name: Push commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: main
-          commit_message: "Automatically update app.yaml version of ${{ inputs.name }} to v${{ steps.next-version.outputs.version }}"
-          tagging_message: "${{ inputs.name }}-v${{ steps.next-version.outputs.version }}"
+          commit_message: "[skip actions] Automatically update app.yaml version of ${{ needs.app.outputs.name }} to v${{ needs.next-version.outputs.version }}"
+          tagging_message: "${{ needs.app.outputs.name }}-v${{ needs.next-version.outputs.version }}"
+
+  build-and-push:
+    strategy:
+      matrix:
+        profile: [ 'dev', 'qa' ]
+    name: Build and push
+    environment: ${{ matrix.profile }}
+    needs: [ app, next-version, commit-and-tag ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: earthly/actions-setup@v1
+        with:
+          version: v0.7.8
+      - uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ needs.app.outputs.name }}-v${{ needs.next-version.outputs.version }}
+      - name: Build Docker image
+        run: earthly ${{ inputs.path }}/+docker --name=${{ needs.app.outputs.name }} --version=${{ steps.next-version.outputs.version }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          NAME: ${{ needs.app.outputs.name }}
+          PROFILE: ${{ inputs.profile }}
+          IMAGE_TAG: ${{ steps.next-version.outputs.version }}
+        run: |
+          docker tag $NAME:$IMAGE_TAG $REGISTRY/$NAME-$PROFILE:$IMAGE_TAG
+          docker push $REGISTRY/$NAME-$PROFILE:$IMAGE_TAG

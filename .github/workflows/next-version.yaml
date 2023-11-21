@@ -6,7 +6,10 @@ on:
       profile:
         type: string
         required: true
-      path:
+      type:
+        type: string
+        required: true
+      version:
         type: string
         required: true
     outputs:
@@ -20,15 +23,29 @@ jobs:
       version: ${{ steps.next-version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
-      - name: Get current version
-        id: current-version
-        uses: mikefarah/yq@master
-        with:
-          cmd: yq '.version' ${{ inputs.path }}/app.yaml
       - id: semver
         uses: madhead/semver-utils@latest
         with:
-          version: ${{ steps.current-version.outputs.result }}
+          version: ${{ inputs.version }}
       - name: Get next version
         id: next-version
-        run: echo "version=${{ steps.semver.outputs.release }}-${{ github.sha }}" >> $GITHUB_OUTPUT
+        run: |
+          if [[ "${{ inputs.profile }}" == "prod" ]]; then
+            if [[ "${{ inputs.type }}" == "major" ]]; then
+              VERSION="${{ steps.semver.outputs.inc-major }}"
+            elif [[ "${{ inputs.type }}" == "minor" ]]; then
+              VERSION="${{ steps.semver.outputs.inc-minor }}"
+            elif [[ "${{ inputs.type }}" == "patch" ]]; then
+              VERSION="${{ steps.semver.outputs.inc-patch }}"
+            fi
+          elif [[ "${{ inputs.profile }}" == "qa" -o "${{ inputs.profile }}" == "dev" ]]; then
+            if [[ "${{ inputs.type }}" == "major" ]]; then
+              VERSION="${{ steps.semver.outputs.inc-premajor }}"
+            elif [[ "${{ inputs.type }}" == "minor" ]]; then
+              VERSION="${{ steps.semver.outputs.inc-preminor }}"
+            elif [[ "${{ inputs.type }}" == "patch" ]]; then
+              VERSION="${{ steps.semver.outputs.inc-prepatch }}"
+            fi
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        shell: bash

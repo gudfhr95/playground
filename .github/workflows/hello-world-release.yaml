@@ -20,20 +20,12 @@ jobs:
     name: Check Node.js
     uses: ./.github/workflows/node-check.yaml
 
-  app:
-    name: Parse app.yaml
-    needs: check
-    uses: ./.github/workflows/parse-app-yaml.yaml
-    with:
-      path: ./apps/hello-world
-
-  release:
+  auto-release:
     name: Release
-    needs: app
+    needs: check
+    if: github.event_name == 'push'
     uses: ./.github/workflows/release.yaml
     with:
-      type: ${{ inputs.type }}
-      name: ${{ needs.app.outputs.name }}
-      version: ${{ needs.app.outputs.version }}
+      profile: ${{ matrix.profile }}
       path: ./apps/hello-world
     secrets: inherit
