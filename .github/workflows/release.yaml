@@ -44,5 +44,6 @@ jobs:
       - name: Push commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Automatically update app.yaml version of ${{ inputs.name }} to v${{ steps.next-version.outputs.version }}"
           branch: main
+          commit_message: "Automatically update app.yaml version of ${{ inputs.name }} to v${{ steps.next-version.outputs.version }}"
+          tagging_message: "${{ inputs.name }}-v${{ steps.next-version.outputs.version }}"
