@@ -16,8 +16,8 @@ jobs:
   parse-app-yaml:
     runs-on: ubuntu-latest
     outputs:
-      name: ${{ steps.name.outputs.name}}
-      version: ${{ steps.next-version.outputs.version }}
+      name: ${{ steps.name.outputs.name }}
+      version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
       - name: Get name
