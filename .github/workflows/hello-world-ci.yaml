@@ -16,17 +16,12 @@ jobs:
     name: Check Node.js
     uses: ./.github/workflows/node-check.yaml
 
-  build-and-push:
-    strategy:
-      matrix:
-        include:
-          - profile: dev
-            condition: github.ref == 'refs/heads/main'
-    name: Build and push
+  build-and-push-dev:
+    name: Build and push (Dev)
+    if: github.ref == 'refs/heads/main'
     needs: check
     uses: ./.github/workflows/build-and-push.yaml
     with:
-      condition: ${{ matrix.condition }}
-      profile: ${{ matrix.profile }}
+      profile: dev
       path: ./apps/hello-world
     secrets: inherit
