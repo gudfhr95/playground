@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        type: string
+        required: true
+      type:
+        type: string
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse app.yaml
+        id: app
+        uses: ./.github/workflows/parse-app-yaml
+        with:
+          path: ${{ inputs.path }}
+      - id: semver
+        uses: madhead/semver-utils@latest
+        with:
+          version: ${{ steps.app.outputs.version }}
+      - name: Get next version
+        id: next-version
+        run: |
+          if [[ "${{ inputs.type }}" == "MAJOR" ]]; then
+            VERSION="${{ steps.semver.outputs.inc-major }}"
+          elif [[ "${{ inputs.type }}" == "MINOR" ]]; then
+            VERSION="${{ steps.semver.outputs.inc-minor }}"
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        shell: bash
+      - name: Change version
+        uses: mikefarah/yq@master
+        with:
+          cmd: >
+            yq -i
+            '.version = "${{ steps.next-version.outputs.version }}"'
+            ${{ inputs.path }}/app.yaml
+      - name: Push commit
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "[skip actions] Automatically update app.yaml version of ${{ steps.app.outputs.name }} to v${{ steps.next-version.outputs.version }}"
+          branch: main
+      - name: Push release branch
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: release/${{ steps.app.outputs.name }}-v${{ steps.next-version.outputs.version }}
+          create_branch: true

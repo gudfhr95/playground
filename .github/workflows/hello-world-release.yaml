@@ -1,0 +1,21 @@
+name: Hello World Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      type:
+        description: Release type ([MAJOR].[MINOR])
+        type: choice
+        required: true
+        options:
+          - MINOR
+          - MAJOR
+        default: MINOR
+
+jobs:
+  release:
+    name: Release
+    uses: ./.github/workflows/release.yaml
+    with:
+      path: ./apps/hello-world
+      type: ${{ inputs.type }}
