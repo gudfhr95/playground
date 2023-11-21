@@ -1,0 +1,38 @@
+name: Parse app.yaml
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        type: string
+        required: true
+    outputs:
+      name:
+        value: ${{ jobs.parse-app-yaml.outputs.name }}
+      version:
+        value: ${{ jobs.parse-app-yaml.outputs.version }}
+
+jobs:
+  parse-app-yaml:
+    runs-on: ubuntu-latest
+    outputs:
+      name: ${{ steps.name.outputs.name}}
+      version: ${{ steps.next-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get name
+        id: name
+        uses: mikefarah/yq@master
+        with:
+          cmd: |
+            echo name=$(
+              yq '.name' ${{ inputs.path }}/app.yaml
+            ) >> $GITHUB_OUTPUT
+      - name: Get version
+        id: version
+        uses: mikefarah/yq@master
+        with:
+          cmd: |
+            echo version=$(
+              yq '.version' ${{ inputs.path }}/app.yaml
+            ) >> $GITHUB_OUTPUT
