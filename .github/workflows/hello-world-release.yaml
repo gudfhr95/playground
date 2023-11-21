@@ -1,16 +1,20 @@
 name: Hello World Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      type:
-        description: Release type ([MAJOR].[MINOR])
-        type: choice
-        required: true
-        options:
-          - MINOR
-          - MAJOR
-        default: MINOR
+  push:
+    branches: [ main ]
+    paths:
+      - 'apps/hello-world/**'
+#  workflow_dispatch:
+#    inputs:
+#      type:
+#        description: Release type
+#        type: choice
+#        required: true
+#        options:
+#          - MINOR
+#          - MAJOR
+#        default: MINOR
 
 jobs:
   app:
@@ -19,13 +23,24 @@ jobs:
     with:
       path: ./apps/hello-world
 
-  release:
-    name: Release
+  pre-release:
+    name: Pre release
+    if: github.event_name == 'push'
     needs: app
     uses: ./.github/workflows/release.yaml
     with:
-      type: ${{ inputs.type }}
+      type: preminor
       name: ${{ needs.app.outputs.name }}
       version: ${{ needs.app.outputs.version }}
       path: ./apps/hello-world
-    secrets: inherit
+
+#  release:
+#    name: Release
+#    needs: app
+#    uses: ./.github/workflows/release.yaml
+#    with:
+#      type: ${{ inputs.type }}
+#      name: ${{ needs.app.outputs.name }}
+#      version: ${{ needs.app.outputs.version }}
+#      path: ./apps/hello-world
+#    secrets: inherit

@@ -25,13 +25,12 @@ jobs:
         uses: madhead/semver-utils@latest
         with:
           version: ${{ inputs.version }}
+          identifier: "rc"
       - name: Get next version
         id: next-version
         run: |
-          if [[ "${{ inputs.type }}" == "MAJOR" ]]; then
-            VERSION="${{ steps.semver.outputs.inc-major }}"
-          elif [[ "${{ inputs.type }}" == "MINOR" ]]; then
-            VERSION="${{ steps.semver.outputs.inc-minor }}"
+          if [[ "${{ inputs.type }}" == "preminor" ]]; then
+            VERSION="${{ steps.semver.outputs.inc-preminor }}"
           fi
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
         shell: bash
@@ -45,11 +44,5 @@ jobs:
       - name: Push commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "[skip actions] Automatically update app.yaml version of ${{ inputs.name }} to v${{ steps.next-version.outputs.version }}"
+          commit_message: "Automatically update app.yaml version of ${{ inputs.name }} to v${{ steps.next-version.outputs.version }}"
           branch: main
-      - name: Create release branch
-        uses: peterjgrainger/action-create-branch@v2.4.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          branch: release/${{ inputs.name }}-v${{ steps.next-version.outputs.version }}
