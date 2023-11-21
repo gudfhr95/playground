@@ -16,20 +16,17 @@ jobs:
     name: Check Node.js
     uses: ./.github/workflows/node-check.yaml
 
-  next-version:
-    name: Get next version
-    needs: check
-    uses: ./.github/workflows/next-version.yaml
-    with:
-      path: ./apps/hello-world
-      profile: dev
-
   build-and-push:
+    strategy:
+      matrix:
+        include:
+          - profile: dev
+            condition: github.ref == 'refs/heads/main'
     name: Build and push
-    needs: next-version
+    needs: check
+    if: ${{ matrix.condition }}
     uses: ./.github/workflows/build-and-push.yaml
     with:
+      profile: ${{ matrix.profile }}
       path: ./apps/hello-world
-      profile: dev
-      version: ${{ needs.next-version.outputs.version }}
     secrets: inherit

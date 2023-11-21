@@ -3,37 +3,44 @@ name: Build and Push
 on:
   workflow_call:
     inputs:
-      path:
-        type: string
-        required: true
       profile:
         type: string
         required: true
-      version:
+      path:
         type: string
-        required: true
-    secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        required: true
-      AWS_REGION:
         required: true
 
 jobs:
+  app:
+    name: Parse app.yaml
+    uses: ./.github/workflows/parse-app-yaml.yaml
+    with:
+      path: ${{ inputs.path }}
+
   build-and-push:
+    name: Build and push
+    environment: ${{ inputs.profile }}
+    needs: app
     runs-on: ubuntu-latest
     steps:
       - uses: earthly/actions-setup@v1
         with:
           version: v0.7.8
       - uses: actions/checkout@v4
-      - id: name
-        uses: mikefarah/yq@master
+      - id: semver
+        uses: madhead/semver-utils@latest
         with:
-          cmd: yq '.name' ${{ inputs.path }}/app.yaml
+          version: ${{ needs.app.outputs.version }}
+      - name: Get next version
+        id: next-version
+        run: |
+          if [[ "${{ inputs.profile }}" == "dev" ]]; then
+            VERSION="${{ steps.semver.outputs.release }}-${{ github.sha }}"
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        shell: bash
       - name: Build Docker image
-        run: earthly ${{ inputs.path }}/+docker --name=${{ steps.name.outputs.result }} --version=${{ inputs.version }}
+        run: earthly ${{ inputs.path }}/+docker --name=${{ needs.app.outputs.name }} --version=${{ steps.next-version.outputs.version }}
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -46,8 +53,9 @@ jobs:
       - name: Build, tag, and push docker image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: hello-world-${{ inputs.profile }}
-          IMAGE_TAG: ${{ inputs.version }}
+          NAME: ${{ needs.app.outputs.name }}
+          PROFILE: ${{ inputs.profile }}
+          IMAGE_TAG: ${{ steps.next-version.outputs.version }}
         run: |
-          docker tag hello-world:$IMAGE_TAG $REGISTRY/$REPOSITORY:$IMAGE_TAG
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker tag $NAME:$IMAGE_TAG $REGISTRY/$NAME-$PROFILE:$IMAGE_TAG
+          docker push $REGISTRY/$NAME-$PROFILE:$IMAGE_TAG
