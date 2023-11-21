@@ -3,9 +3,6 @@ name: Get Next Version
 on:
   workflow_call:
     inputs:
-      profile:
-        type: string
-        required: true
       type:
         type: string
         required: true
@@ -27,25 +24,24 @@ jobs:
         uses: madhead/semver-utils@latest
         with:
           version: ${{ inputs.version }}
+          identifier: 'rc'
       - name: Get next version
         id: next-version
         run: |
-          if [[ "${{ inputs.profile }}" == "prod" ]]; then
-            if [[ "${{ inputs.type }}" == "major" ]]; then
-              VERSION="${{ steps.semver.outputs.inc-major }}"
-            elif [[ "${{ inputs.type }}" == "minor" ]]; then
-              VERSION="${{ steps.semver.outputs.inc-minor }}"
-            elif [[ "${{ inputs.type }}" == "patch" ]]; then
-              VERSION="${{ steps.semver.outputs.inc-patch }}"
-            fi
-          elif [[ "${{ inputs.profile }}" == "qa" -o "${{ inputs.profile }}" == "dev" ]]; then
-            if [[ "${{ inputs.type }}" == "major" ]]; then
-              VERSION="${{ steps.semver.outputs.inc-premajor }}"
-            elif [[ "${{ inputs.type }}" == "minor" ]]; then
-              VERSION="${{ steps.semver.outputs.inc-preminor }}"
-            elif [[ "${{ inputs.type }}" == "patch" ]]; then
-              VERSION="${{ steps.semver.outputs.inc-prepatch }}"
-            fi
+          if [[ "${{ inputs.type }}" == "pre-release" ]]; then
+            VERSION="${{ steps.semver.outputs.inc-prerelease }}"
+          elif [[ "${{ inputs.type }}" == "pre-patch" ]]; then
+            VERSION="${{ steps.semver.outputs.inc-prepatch }}"
+          elif [[ "${{ inputs.type }}" == "patch" ]]; then
+            VERSION="${{ steps.semver.outputs.inc-patch }}"
+          elif [[ "${{ inputs.type }}" == "pre-minor" ]]; then
+            VERSION="${{ steps.semver.outputs.inc-preminor }}"
+          elif [[ "${{ inputs.type }}" == "minor" ]]; then
+            VERSION="${{ steps.semver.outputs.inc-minor }}"
+          elif [[ "${{ inputs.type }}" == "pre-major" ]]; then
+            VERSION="${{ steps.semver.outputs.inc-premajor }}"
+          elif [[ "${{ inputs.type }}" == "major" ]]; then
+            VERSION="${{ steps.semver.outputs.inc-major }}"
           fi
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
         shell: bash

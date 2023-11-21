@@ -3,6 +3,10 @@ name: Release
 on:
   workflow_call:
     inputs:
+      type:
+        type: string
+        required: false
+        default: pre-release
       path:
         type: string
         required: true
@@ -17,16 +21,10 @@ jobs:
   next-version:
     name: Get next version
     needs: app
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.semver.outputs.inc-prerelease }}
-    steps:
-      - uses: actions/checkout@v4
-      - id: semver
-        uses: madhead/semver-utils@latest
-        with:
-          version: ${{ needs.app.outputs.version }}
-          identifier: 'rc'
+    uses: ./.github/workflows/next-version.yaml
+    with:
+      type: ${{ inputs.type }}
+      version: ${{ needs.app.outputs.version }}
 
   commit-and-tag:
     name: Commit and tag

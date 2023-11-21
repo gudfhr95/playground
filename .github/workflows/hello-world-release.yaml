@@ -7,24 +7,28 @@ on:
       - 'apps/hello-world/**'
   workflow_dispatch:
     inputs:
-      profile:
-        description: 'Environment profile'
+      type:
+        description: 'Type of release'
         type: choice
         required: true
         options:
-          - dev
-        default: dev
+          - pre-patch
+          - patch
+          - pre-minor
+          - minor
+          - pre-major
+          - major
 
 jobs:
   check:
     name: Check Node.js
     uses: ./.github/workflows/node-check.yaml
 
-  auto-release:
+  release:
     name: Release
     needs: check
-    if: github.event_name == 'push'
     uses: ./.github/workflows/release.yaml
     with:
+      type: ${{ inputs.type }}
       path: ./apps/hello-world
     secrets: inherit
