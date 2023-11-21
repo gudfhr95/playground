@@ -7,20 +7,22 @@ on:
       - 'apps/hello-world/**'
   workflow_dispatch:
     inputs:
-      type:
-        description: Release type
+      profile:
+        description: 'Environment profile'
         type: choice
         required: true
         options:
-          - patch
-          - preminor
-          - minor
-          - major
-        default: preminor
+          - dev
+        default: dev
 
 jobs:
+  check:
+    name: Check Node.js
+    uses: ./.github/workflows/node-check.yaml
+
   app:
     name: Parse app.yaml
+    needs: check
     uses: ./.github/workflows/parse-app-yaml.yaml
     with:
       path: ./apps/hello-world
