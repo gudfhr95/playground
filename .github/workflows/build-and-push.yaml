@@ -9,10 +9,15 @@ on:
       path:
         type: string
         required: true
+      condition:
+        type: boolean
+        required: false
+        default: true
 
 jobs:
   app:
     name: Parse app.yaml
+    if: ${{ inputs.condition }}
     uses: ./.github/workflows/parse-app-yaml.yaml
     with:
       path: ${{ inputs.path }}
