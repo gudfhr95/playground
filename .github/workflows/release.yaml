@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Parse app.yaml
         id: app
-        uses: ./.github/workflows/parse-app-yaml
+        uses: ./.github/workflows/parse-app-yaml.yaml
         with:
           path: ${{ inputs.path }}
       - id: semver
