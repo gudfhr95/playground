@@ -48,7 +48,7 @@ jobs:
           commit_message: "[skip actions] Automatically update app.yaml version of ${{ inputs.name }} to v${{ steps.next-version.outputs.version }}"
           branch: main
       - name: Create release branch
-        uses: peterjgrainger/action-create-branch@v2.3.0
+        uses: peterjgrainger/action-create-branch@v2.4.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
