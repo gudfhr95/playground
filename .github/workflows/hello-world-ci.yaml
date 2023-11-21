@@ -25,9 +25,10 @@ jobs:
             condition: github.ref == 'refs/heads/main'
     name: Build and push
     needs: check
-    uses: ./.github/workflows/build-and-push.yaml
-    if: ${{ matrix.condition }}
-    with:
-      profile: ${{ matrix.profile }}
-      path: ./apps/hello-world
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+      - if: ${{ matrix.condition }}
+        uses: ./.github/workflows/build-and-push.yaml
+        with:
+          profile: ${{ matrix.profile }}
+          path: ./apps/hello-world
