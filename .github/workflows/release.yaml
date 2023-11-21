@@ -22,13 +22,14 @@ jobs:
     needs: app
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.semver.outputs.preminor }}
+      version: ${{ steps.semver.outputs.inc-preminor }}
     steps:
       - uses: actions/checkout@v4
       - id: semver
         uses: madhead/semver-utils@latest
         with:
           version: ${{ needs.app.outputs.version }}
+          identifier: 'rc'
 
   commit-and-tag:
     name: Commit and tag
