@@ -67,7 +67,7 @@ jobs:
         with:
           ref: refs/tags/${{ needs.app.outputs.name }}-v${{ needs.next-version.outputs.version }}
       - name: Build Docker image
-        run: earthly ${{ inputs.path }}/+docker --name=${{ needs.app.outputs.name }} --version=${{ steps.next-version.outputs.version }}
+        run: earthly ${{ inputs.path }}/+docker --name=${{ needs.app.outputs.name }} --version=${{ needs.next-version.outputs.version }}
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -82,7 +82,7 @@ jobs:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           NAME: ${{ needs.app.outputs.name }}
           PROFILE: ${{ inputs.profile }}
-          IMAGE_TAG: ${{ steps.next-version.outputs.version }}
+          IMAGE_TAG: ${{ needs.next-version.outputs.version }}
         run: |
           docker tag $NAME:$IMAGE_TAG $REGISTRY/$NAME-$PROFILE:$IMAGE_TAG
           docker push $REGISTRY/$NAME-$PROFILE:$IMAGE_TAG
