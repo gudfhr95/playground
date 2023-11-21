@@ -49,5 +49,7 @@ jobs:
           branch: main
       - name: Create release branch
         uses: peterjgrainger/action-create-branch@v2.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           branch: release/${{ inputs.name }}-v${{ steps.next-version.outputs.version }}

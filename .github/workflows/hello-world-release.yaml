@@ -28,3 +28,4 @@ jobs:
       name: ${{ needs.app.outputs.name }}
       version: ${{ needs.app.outputs.version }}
       path: ./apps/hello-world
+    secrets: inherit
