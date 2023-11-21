@@ -5,16 +5,17 @@ on:
     branches: [ main ]
     paths:
       - 'apps/hello-world/**'
-#  workflow_dispatch:
-#    inputs:
-#      type:
-#        description: Release type
-#        type: choice
-#        required: true
-#        options:
-#          - MINOR
-#          - MAJOR
-#        default: MINOR
+  workflow_dispatch:
+    inputs:
+      type:
+        description: Release type
+        type: choice
+        required: true
+        options:
+          - patch
+          - minor
+          - major
+        default: preminor
 
 jobs:
   app:
@@ -23,24 +24,13 @@ jobs:
     with:
       path: ./apps/hello-world
 
-  pre-release:
-    name: Pre release
-    if: github.event_name == 'push'
+  release:
+    name: Release
     needs: app
     uses: ./.github/workflows/release.yaml
     with:
-      type: preminor
+      type: ${{ inputs.type }}
       name: ${{ needs.app.outputs.name }}
       version: ${{ needs.app.outputs.version }}
       path: ./apps/hello-world
-
-#  release:
-#    name: Release
-#    needs: app
-#    uses: ./.github/workflows/release.yaml
-#    with:
-#      type: ${{ inputs.type }}
-#      name: ${{ needs.app.outputs.name }}
-#      version: ${{ needs.app.outputs.version }}
-#      path: ./apps/hello-world
-#    secrets: inherit
+    secrets: inherit

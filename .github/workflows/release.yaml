@@ -29,7 +29,13 @@ jobs:
       - name: Get next version
         id: next-version
         run: |
-          if [[ "${{ inputs.type }}" == "preminor" ]]; then
+          if [[ "${{ inputs.type }}" == "major" ]]; then
+            VERSION="${{ steps.semver.outputs.inc-major }}"
+          elif [[ "${{ inputs.type }}" == "minor" ]]; then
+            VERSION="${{ steps.semver.outputs.inc-minor }}"
+          elif [[ "${{ inputs.type }}" == "patch" ]]; then
+            VERSION="${{ steps.semver.outputs.inc-patch }}"
+          elif [[ "${{ inputs.type }}" == "preminor" ]]; then
             VERSION="${{ steps.semver.outputs.inc-preminor }}"
           fi
           echo "version=${VERSION}" >> $GITHUB_OUTPUT

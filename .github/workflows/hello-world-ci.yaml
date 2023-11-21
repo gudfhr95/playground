@@ -3,6 +3,8 @@ name: Hello World CI
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'hello-world-v*'
     paths:
       - 'apps/hello-world/**'
   pull_request:
@@ -16,12 +18,22 @@ jobs:
     name: Check Node.js
     uses: ./.github/workflows/node-check.yaml
 
-  build-and-push-dev:
-    name: Build and push (Dev)
-    if: github.ref == 'refs/heads/main'
-    needs: check
-    uses: ./.github/workflows/build-and-push.yaml
-    with:
-      profile: dev
-      path: ./apps/hello-world
-    secrets: inherit
+#  build-and-push-dev:
+#    name: Build and push (Dev)
+#    if: github.ref == 'refs/heads/main'
+#    needs: check
+#    uses: ./.github/workflows/build-and-push.yaml
+#    with:
+#      profile: dev
+#      path: ./apps/hello-world
+#    secrets: inherit
+#
+#  build-and-push-qa:
+#    name: Build and push (Dev)
+#    if: startsWith(github.ref, 'refs/heads/release/hello-world')
+#    needs: check
+#    uses: ./.github/workflows/build-and-push.yaml
+#    with:
+#      profile: dev
+#      path: ./apps/hello-world
+#    secrets: inherit
