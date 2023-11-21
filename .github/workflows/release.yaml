@@ -49,7 +49,12 @@ jobs:
   build-and-push:
     strategy:
       matrix:
-        profile: [ 'dev', 'qa' ]
+        profile: [ 'dev', 'qa', 'stage', 'prod' ]
+        build-prod:
+          - ${{ inputs.type == 'patch' || inputs.type == 'minor' || inputs.type == 'major' }}
+        exclude:
+          - profile: 'prod'
+            build-prod: false
     name: Build and push
     environment: ${{ matrix.profile }}
     needs: [ app, next-version, commit-and-tag ]
