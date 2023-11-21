@@ -3,9 +3,6 @@ name: Release
 on:
   workflow_call:
     inputs:
-      profile:
-        type: string
-        required: true
       path:
         type: string
         required: true
@@ -22,7 +19,7 @@ jobs:
     needs: app
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.semver.outputs.inc-preminor }}
+      version: ${{ steps.semver.outputs.inc-prerelease }}
     steps:
       - uses: actions/checkout@v4
       - id: semver
@@ -81,7 +78,7 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           NAME: ${{ needs.app.outputs.name }}
-          PROFILE: ${{ inputs.profile }}
+          PROFILE: ${{ matrix.profile }}
           IMAGE_TAG: ${{ needs.next-version.outputs.version }}
         run: |
           docker tag $NAME:$IMAGE_TAG $REGISTRY/$NAME-$PROFILE:$IMAGE_TAG

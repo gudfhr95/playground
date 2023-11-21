@@ -26,6 +26,5 @@ jobs:
     if: github.event_name == 'push'
     uses: ./.github/workflows/release.yaml
     with:
-      profile: ${{ matrix.profile }}
       path: ./apps/hello-world
     secrets: inherit
