@@ -29,6 +29,6 @@ jobs:
     needs: check
     uses: ./.github/workflows/release.yaml
     with:
-      type: ${{ github.event_type == 'workflow_dispatch' && inputs.type || 'pre-release' }}
+      type: ${{ github.event_name == 'workflow_dispatch' && inputs.type || 'pre-release' }}
       path: ./apps/hello-world
     secrets: inherit
