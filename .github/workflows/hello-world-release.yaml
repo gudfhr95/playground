@@ -2,7 +2,7 @@ name: Hello World Release
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, release/hello-world-v* ]
     paths:
       - 'apps/hello-world/**'
   workflow_dispatch:
