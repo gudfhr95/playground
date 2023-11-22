@@ -2,7 +2,7 @@ name: Pulumi Release
 
 on:
   push:
-    branches: [ main, release/infra-v* ]
+    branches: [ main ]
     paths:
       - 'infra/pulumi/**'
   workflow_dispatch:
