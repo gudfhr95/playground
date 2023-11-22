@@ -71,7 +71,7 @@ jobs:
           version: v0.7.8
       - uses: actions/checkout@v4
         with:
-          ref: refs/tags/$APP_NAME-v$APP_VERSION
+          ref: refs/tags/${{ env.APP_NAME }}-v${{ env.APP_VERSION }}
       - name: Build Docker image
         run: earthly ${{ inputs.path }}/+docker --name=${{ env.APP_NAME }} --version=${{ env.APP_VERSION }}
       - name: Configure AWS credentials
