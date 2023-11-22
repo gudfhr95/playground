@@ -29,25 +29,11 @@ jobs:
   commit-and-tag:
     name: Commit and tag
     needs: [ app, next-version ]
-    runs-on: ubuntu-latest
-    env:
-      APP_NAME: ${{ needs.app.outputs.name }}
-      APP_VERSION: ${{ needs.next-version.outputs.version }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Change version
-        uses: mikefarah/yq@master
-        with:
-          cmd: >
-            yq -i
-            '.version = "${{ env.APP_VERSION }}"'
-            ${{ inputs.path }}/app.yaml
-      - name: Push commit
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          branch: main
-          commit_message: "[skip actions] Automatically update app.yaml version of ${{ env.APP_NAME }} to v${{ env.APP_VERSION }}"
-          tagging_message: "${{ env.APP_NAME }}-v${{ env.APP_VERSION }}"
+    uses: ./.github/workflows/commit-and-tag.yaml
+    with:
+      app-name: ${{ needs.app.outputs.name }}
+      app-version: ${{ needs.next-version.outputs.version }}
+      path: ${{ inputs.path }}
 
   build-and-push:
     strategy:

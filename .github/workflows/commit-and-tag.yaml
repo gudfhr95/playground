@@ -1,0 +1,34 @@
+name: Pulumi Preview
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        type: string
+        required: true
+      app-version:
+        type: string
+        required: true
+      path:
+        type: string
+        required: true
+
+jobs:
+  commit-and-tag:
+    name: Commit and tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Change version
+        uses: mikefarah/yq@master
+        with:
+          cmd: >
+            yq -i
+            '.version = "${{ inputs.app-version }}"'
+            ${{ inputs.path }}/app.yaml
+      - name: Push commit
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: ${{ github.ref }}
+          commit_message: "[skip actions] Automatically update app.yaml version of ${{ inputs.app-name }} to v${{ inputs.app-version }}"
+          tagging_message: "${{ inputs.app-name }}-v${{ inputs.app-version }}"
