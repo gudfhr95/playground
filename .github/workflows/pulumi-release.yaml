@@ -1,0 +1,33 @@
+name: Pulumi
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'infra/pulumi/**'
+  workflow_dispatch:
+    inputs:
+      type:
+        description: 'Type of release'
+        type: choice
+        required: true
+        options:
+          - pre-patch
+          - patch
+          - pre-minor
+          - minor
+          - pre-major
+          - major
+
+jobs:
+  check:
+    name: Check Node.js
+    uses: ./.github/workflows/node-check.yaml
+
+  up:
+    name: Pulumi Up
+    needs: check
+    uses: ./.github/workflows/pulumi-up.yaml
+    with:
+      type: ${{ github.event_type == 'workflow_dispatch' && inputs.type || 'pre-release' }}
+    secrets: inherit

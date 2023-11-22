@@ -3,28 +3,55 @@ name: Pulumi Up
 on:
   workflow_call:
     inputs:
-      profile:
+      type:
         type: string
-        required: true
-    secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        required: true
-      AWS_REGION:
-        required: true
-      PULUMI_ORG_NAME:
-        required: true
-      PULUMI_ACCESS_TOKEN:
-        required: true
+        required: false
+        default: 'pre-release'
 
 jobs:
+  app:
+    name: Parse app.yaml
+    uses: ./.github/workflows/parse-app-yaml.yaml
+    with:
+      path: ./infra/pulumi
+
+  next-version:
+    name: Get next version
+    needs: app
+    uses: ./.github/workflows/next-version.yaml
+    with:
+      type: ${{ inputs.type }}
+      version: ${{ needs.app.outputs.version }}
+
+  commit-and-tag:
+    name: Commit and tag
+    needs: [ app, next-version ]
+    uses: ./.github/workflows/commit-and-tag.yaml
+    with:
+      app-name: ${{ needs.app.outputs.name }}
+      app-version: ${{ needs.next-version.outputs.version }}
+      path: ./infra/pulumi
+
   up:
+    strategy:
+      matrix:
+        profile: [ 'dev', 'qa', 'stage', 'prod' ]
+        build-prod:
+          - ${{ inputs.type == 'patch' || inputs.type == 'minor' || inputs.type == 'major' }}
+        exclude:
+          - profile: 'prod'
+            build-prod: false
     name: Pulumi Up
-    runs-on: ubuntu-latest
     environment: ${{ inputs.profile }}
+    needs: [ app, next-version, commit-and-tag ]
+    runs-on: ubuntu-latest
+    env:
+      APP_NAME: ${{ needs.app.outputs.name }}
+      APP_VERSION: ${{ needs.next-version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ env.APP_NAME }}-v${{ env.APP_VERSION }}
       - name: Use pnpm
         uses: pnpm/action-setup@v2
         with:
@@ -45,7 +72,7 @@ jobs:
       - uses: pulumi/actions@v4
         with:
           command: up
-          stack-name: ${{ secrets.PULUMI_ORG_NAME }}/infra/${{ inputs.profile }}
+          stack-name: ${{ secrets.PULUMI_ORG_NAME }}/infra/${{ matrix.profile }}
           work-dir: infra/pulumi
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
