@@ -1,4 +1,4 @@
-name: Get Next Version
+name: Next Version
 
 on:
   workflow_call:

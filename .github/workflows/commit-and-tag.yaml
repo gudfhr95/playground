@@ -1,4 +1,4 @@
-name: Pulumi Preview
+name: Commit And Tag
 
 on:
   workflow_call:
