@@ -29,6 +29,6 @@ jobs:
       - name: Push commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          branch: ${{ github.ref }}
+          branch: ${{ github.head_ref }}
           commit_message: "[skip actions] Automatically update app.yaml version of ${{ inputs.app-name }} to v${{ inputs.app-version }}"
           tagging_message: "${{ inputs.app-name }}-v${{ inputs.app-version }}"
