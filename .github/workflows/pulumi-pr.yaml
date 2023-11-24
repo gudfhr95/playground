@@ -15,7 +15,7 @@ jobs:
   preview:
     strategy:
       matrix:
-        profile: [ 'dev', 'qa', 'stage', 'prod' ]
+        profile: [ 'dev', 'qa', 'prod' ]
     name: Pulumi Preview
     needs: check
     uses: ./.github/workflows/pulumi-preview.yaml

@@ -38,7 +38,7 @@ jobs:
   build-and-push:
     strategy:
       matrix:
-        profile: [ 'dev', 'qa', 'stage', 'prod' ]
+        profile: [ 'dev', 'qa', 'prod' ]
         build-prod:
           - ${{ inputs.type == 'patch' || inputs.type == 'minor' || inputs.type == 'major' }}
         exclude:
