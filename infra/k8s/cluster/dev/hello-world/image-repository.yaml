@@ -19,4 +19,4 @@ spec:
     name: hello-world
   policy:
     semver:
-      range: ">=0.0.0"
+      range: ">=0.0.0-rc.0"
