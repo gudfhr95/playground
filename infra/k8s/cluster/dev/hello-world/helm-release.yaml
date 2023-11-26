@@ -2,17 +2,19 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: hello-world
-  namespace: default
 spec:
-  interval: 5m
+  interval: 1m
   chart:
     spec:
-      chart: ../../../chart/hello-world
+      chart: infra/k8s/chart/hello-world
       version: 0.1.0
       sourceRef:
         kind: GitRepository
-        name: hello-world
+        name: flux-system
         namespace: flux-system
       interval: 1m
   values:
-    replicaCount: 2
+    profile: dev
+    image:
+      repository: 162501354347.dkr.ecr.ap-northeast-2.amazonaws.com/hello-world-dev
+      tag: 0.0.1-rc.0
