@@ -31,6 +31,7 @@
 - Pulumi >= 3
 - Node.js >= 20
 - pnpm >= 8
+- FluxCD >= 2
 
 ### Installing
 
