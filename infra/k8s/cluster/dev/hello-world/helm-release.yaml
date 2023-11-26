@@ -2,7 +2,6 @@ apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: GitRepository
 metadata:
   name: hello-world
-  namespace: default
 spec:
   interval: 1m
   url: https://github.com/gudfhr95/playground
@@ -18,6 +17,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: hello-world
+  namespace: default
 spec:
   interval: 1m
   chart:
