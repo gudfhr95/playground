@@ -33,5 +33,5 @@ spec:
   values:
     profile: dev
     image:
-      repository: 162501354347.dkr.ecr.ap-northeast-2.amazonaws.com/hello-world-dev
-      tag: 0.0.1-rc.0
+      repository: 162501354347.dkr.ecr.ap-northeast-2.amazonaws.com/hello-world-dev # {"$imagepolicy": "flux-system:hello-world:name"}
+      tag: 0.0.1-rc.0 # {"$imagepolicy": "flux-system:hello-world:tag"}
