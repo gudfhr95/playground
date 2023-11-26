@@ -6,4 +6,6 @@ metadata:
   namespace: flux-system
 spec:
   image: 162501354347.dkr.ecr.ap-northeast-2.amazonaws.com/hello-world-dev
+  secretRef:
+    name: ecr-credentials
   interval: 1m0s
