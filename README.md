@@ -32,6 +32,7 @@
 - Node.js >= 20
 - pnpm >= 8
 - FluxCD >= 2
+- Helm >= 3
 
 ### Installing
 

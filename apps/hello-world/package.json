@@ -2,7 +2,7 @@
   "name": "hello-world",
   "main": "src/index.ts",
   "scripts": {
-    "start": "node out/index.js",
+    "start": "node out/src/index.js",
     "build": "tsc -p .",
     "dev": "env-cmd -f .env.dev nodemon --watch \"src/**/*.ts\" --exec \"ts-node\" src/index.ts"
   },
